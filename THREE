@@ -1,0 +1,125 @@
+#include<fstream>
+#include<iostream>
+#include<string>
+#include<math.h>
+#include<sstream>
+using namespace std;
+#define MAX 1000
+int total = 0;
+typedef struct Tree//数据结构
+{
+	int data;
+	Tree* le = NULL;//定义le、ri、fa为空指针
+	Tree* ri = NULL;
+	Tree* fa = NULL;
+}*tree;
+tree SetTree(istringstream& sin)//树的创建
+{
+	tree arr[MAX];
+	tree temp;
+	string s;
+	int head = 0, tail = 0;
+	tree sp = new Tree;
+	if (!getline(sin, s, ','))
+	{
+
+
+		return sp;
+	}
+
+	sp->data = s[0] - '0';
+	arr[tail++] = sp;
+	while (tail > head)
+	{
+		if (!getline(sin, s, ','))
+		{
+
+			return sp;
+		}
+
+		else//遍历
+		{
+
+			temp = new Tree;
+			temp->data = s[0] - '0';
+			arr[head]->le = temp;
+			temp->fa = arr[head];
+			arr[tail++] = temp;
+		}
+
+		if (!getline(sin, s, ','))
+		{
+
+			return sp;
+		}
+
+		else
+		{
+
+			temp = new Tree;
+			temp->data = s[0] - '0';
+			arr[head]->ri = temp;
+			temp->fa = arr[head];
+			arr[tail++] = temp;
+		}
+
+
+	head++;
+
+	}
+
+	return sp;
+}
+void find(tree head)//查找相加
+{
+
+	if (!head)
+	{
+
+		return;
+	}
+
+	if (!head->le && !head->ri)//左结点和右结点
+	{
+		tree temp = head;
+		double i = 1.0;
+		int tol = 0;
+		tol += temp->data;
+		temp = temp->fa;
+		while (temp)
+		{
+
+			tol += (int)temp->data * (int)pow(10.0, i);
+			temp = temp->fa;
+			i++;
+		}
+
+		total += tol;
+	}
+
+	else
+	{
+		find(head->le);
+		find(head->ri);
+	}
+
+}
+void start()
+{
+	std::istringstream sin;
+	string line, s;
+
+	cin >> line;
+	sin.str(line);
+	tree head = NULL;
+	head = SetTree(sin);
+
+	find(head);
+}
+
+int main()
+{
+	start();
+	cout << total;
+	return 0;
+}
